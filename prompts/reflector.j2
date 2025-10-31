@@ -1,0 +1,74 @@
+Your job is to diagnose the current trajectory: identify what went wrong (or could be better), grounded in execution feedback, actions taken, evaluation (optional), and ground truth reasoning (optional).
+
+**Instructions:**
+
+* Carefully analyze the model’s reasoning trace to identify where it went wrong
+* Take the environment feedback into account, comparing the predicted answer with the ground truth to understand the gap
+* Identify specific components, calculation mistakes, or misapplied strategies
+* Provide actionable insights that could help the model avoid this mistake in the future
+* Identify root causes: wrong source of truth, bad filters (timeframe/direction/identity), formatting issues, or missing authentication and how to correct them
+* Provide concise, step-by-step corrections the model should take on this task
+* Be specific about what the model should have done differently
+* You will receive bulletpoints that are part of playbook that is used by the generator to answer the question
+* You need to analyze these bulletpoints, and give the tag for each bulletpoint, tag can be [‘helpful’, ‘harmful’, ‘neutral’] (for the generator to generate the correct answer)
+{{ reflector_additional_instructions }}
+
+---
+
+### Inputs:
+
+* Ground truth (reference, known-correct) (optional):
+
+**GROUND_TRUTH**
+{{ ground_truth }}
+**GROUND_TRUTH_END**
+
+* Evaluation (e.g. metrics, unit tests, etc.) for the task after the trajectory was completed (optional):
+
+**EVALUATION_START**
+{{ evaluation }}
+**EVALUATION_END**
+
+* ACE retrieved playbook (entries selected from the global playbook for this trajectory):
+
+**RETRIEVED_PLAYBOOK_START**
+{{ retrieved_playbook }}
+**RETRIEVED_PLAYBOOK_END**
+
+---
+
+
+### Outputs:
+
+Your output should be a JSON object, which contains the following fields:
+
+* **reasoning:** your chain of thought / reasoning / thinking process, detailed analysis and calculations
+* **error_identification:** what specifically went wrong in the reasoning
+* **root_cause_analysis:** why did this error occur? what concept was misunderstood?
+* **correct_approach:** what should the model have done instead?
+* **key_insight:** what strategy, formula, or principle should be remembered to avoid this error?
+* **bullet_tags:** array of objects tagging each playbook bulletpoint with fields `id` and `tag` where `tag` ∈ ['helpful', 'harmful', 'neutral'] representing the influence the bulletpoint had on the final answer
+
+---
+
+### Answer in this exact JSON format:
+
+```json
+{
+  "reasoning": "[Your chain of thought / reasoning / thinking process, detailed analysis and calculations]",
+  "error_identification": "[What specifically went wrong in the reasoning?]",
+  "root_cause_analysis": "[Why did this error occur? What concept was misunderstood?]",
+  "correct_approach": "[What should the model have done instead?]",
+  "key_insight": "[What strategy, formula, or principle should be remembered to avoid this error?]",
+  "bullet_tags": [
+    { "id": "[bullet_id_1]", "tag": "helpful" },
+    { "id": "[bullet_id_2]", "tag": "harmful" },
+    { "id": "[bullet_id_3]", "tag": "neutral" }
+  ]
+}
+```
+
+### Full Agent–Environment Trajectory:
+**FULL AGENT–ENVIRONMENT TRAJECTORY**
+{{ trajectory }}
+**FULL AGENT–ENVIRONMENT TRAJECTORY_END**

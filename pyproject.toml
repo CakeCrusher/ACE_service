@@ -1,0 +1,17 @@
+[project]
+name = "ace-service"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "jinja2>=3.1.6",
+    "openai>=2.6.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.7.0",
+    "black>=24.8.0",
+    "ruff>=0.6.0",
+]
