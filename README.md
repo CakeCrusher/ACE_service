@@ -188,6 +188,18 @@ class ApplyCurationOutput(BaseModel):
 #       /increment_neutral
 #   We reflect that in the API models below.
 
+# 0. Embedded prompt
+
+class EmbeddedPromptInput(BaseModel):
+    """Request model for GET /embed_prompt.
+    Used by: client (agent runtime) BEFORE it calls its LLM.
+    Embeds user prompt into generator template."""
+    prompt: str = Field(..., description="The prompt to be embedded.")
+
+class EmbeddedPromptOutput(BaseModel):
+    """Response model for GET /embed_prompt.
+    Returns the embedded prompt."""
+    prompt: str = Field(..., description="The embedded prompt.")
 
 # 1. Playbook Management / Introspection
 
