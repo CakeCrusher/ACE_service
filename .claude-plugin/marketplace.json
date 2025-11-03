@@ -1,0 +1,21 @@
+{
+  "name": "ace-marketplace",
+  "version": "1.0.0",
+  "description": "Marketplace entry for the ACE plugins, which enables continuous learning for agents by integrating the Agentic Context Engineering workflow.",
+  "owner": {
+    "name": "Sebastian Sosa",
+    "email": "1sebastian1sosa1@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "ace_service",
+      "description": "Integrates the ACE (Agentic Context Engineering) service for agents, enabling continuous learning and optimization for your agent.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Sebastian Sosa"
+      },
+      "source": "./plugins/ace_service",
+      "category": "integration"
+    }
+  ]
+}

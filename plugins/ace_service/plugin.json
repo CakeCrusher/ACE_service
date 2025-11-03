@@ -1,0 +1,8 @@
+{
+  "name": "ace_service",
+  "description": "Integrates the ACE (Agentic Context Engineering) service for agents, enabling continuous learning and optimization for your agent.",
+  "version": "1.0.0",
+  "author": {
+      "name": "Sebastian Sosa"
+  }
+}
