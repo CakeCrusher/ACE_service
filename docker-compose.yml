@@ -1,0 +1,114 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ace-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: temporal  # Temporal uses 'temporal' database by default
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ace-network
+
+  temporal:
+    image: temporalio/auto-setup
+    container_name: ace-temporal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PWD=postgres
+      - POSTGRES_SEEDS=postgres
+      - SKIP_DEFAULT_NAMESPACE_CREATION=false
+    ports:
+      - "7233:7233"  # gRPC endpoint for Temporal clients
+      - "7234:7234"  # Metrics endpoint
+    volumes:
+      - temporal_data:/var/lib/temporal
+    networks:
+      - ace-network
+
+  temporal-ui:
+    image: temporalio/ui
+    container_name: ace-temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_UI_PORT=8233
+    ports:
+      - "8233:8233"  # Temporal Web UI
+    networks:
+      - ace-network
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: ace-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ace_service
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=default
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount source code for hot reloading
+      - ./server:/app:rw
+      # Preserve .venv from build (mount overrides it, so we exclude it from source mount)
+      - ./.env:/app/.env:ro
+    networks:
+      - ace-network
+    command: python -m uvicorn app.api:app --host 0.0.0.0 --port 8000 --reload
+
+  worker:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: ace-worker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ace_service
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=default
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      # Mount source code for hot reloading
+      - ./server:/app:rw
+      # Preserve .venv from build (mount overrides it, so we exclude it from source mount)
+      - ./.env:/app/.env:ro
+    networks:
+      - ace-network
+    command: python -m watchdog.watchmedo auto-restart --directory=/app --pattern="*.py" --recursive -- python worker.py
+
+volumes:
+  postgres_data:
+    driver: local
+  temporal_data:
+    driver: local
+
+networks:
+  ace-network:
+    driver: bridge

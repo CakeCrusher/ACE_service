@@ -1,15 +1,15 @@
 """Database setup and session management."""
+
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
-from models import Base
+from app.database.models import Base
 
 # Database URL from environment variable
 DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/ace_service"
+    "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/ace_service"
 )
 
 engine = create_engine(DATABASE_URL, poolclass=NullPool)
@@ -28,4 +28,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

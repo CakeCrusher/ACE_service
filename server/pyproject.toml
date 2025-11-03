@@ -16,6 +16,7 @@ dependencies = [
     "temporalio>=1.9.0",
     "pydantic>=2.0.0",
     "python-multipart>=0.0.9",
+    "watchdog>=6.0.0",
 ]
 
 [project.optional-dependencies]
