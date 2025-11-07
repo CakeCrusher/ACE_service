@@ -6,6 +6,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: temporal  # Temporal uses 'temporal' database by default
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
@@ -30,6 +32,9 @@ services:
       - POSTGRES_PWD=postgres
       - POSTGRES_SEEDS=postgres
       - SKIP_DEFAULT_NAMESPACE_CREATION=false
+    ports:
+      - "7233:7233"  # gRPC endpoint for Temporal clients
+      - "7234:7234"  # Metrics endpoint
     volumes:
       - temporal_data:/var/lib/temporal
     networks:
@@ -43,6 +48,8 @@ services:
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_UI_PORT=8233
+    ports:
+      - "8233:8233"  # Temporal Web UI
     networks:
       - ace-network
 
