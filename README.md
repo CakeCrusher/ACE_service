@@ -200,7 +200,7 @@ This produced the following output (observed via the [client](./client/) playgro
 
 _New bullet added to the playbook: `Before updating the status of a lead, explicitly confirm the presence and details of the individual (e.g., 'Alice') within the company's records. This can involve a direct search or validation step to ensure the individual is accurately associated with the company.`_
 
-Then I reset the local state (database) and ran the agent again with the same curl command.
+Then I reset the local state (database) of mini_bcs (NOT ACE_service) and ran the agent again with the same curl command.
 ```bash
 curl -X 'POST' \
   'http://127.0.0.1:8001/chat' \
@@ -257,15 +257,16 @@ The agent responded with the following body
 Below is the final state of the playbook.
 
 <img width="1361" height="524" alt="image" src="https://github.com/user-attachments/assets/bd5647fa-6c36-4415-84ef-49077855cb38" />
+
 _Final state of the playbook with now 2 bullets_
 
 ## 🚀 Quick Start
 1. ➕ Add `OPENAI_API_KEY` to your `.env` file.
 2. 🐳 Run `docker compose up` to start the services.
-3. 🔌 Integrate the ACE service into your application by:
+3. 🔌 Integrate the ACE service into your agent by:
     - 🛒 Using the [plugin marketplace](./.claude-plugin/marketplace.json) provided in this repository (refer to the [case study](#case-study) for a step-by-step guide).
     - 🤖 Copy the [integration guide](./plugins/ace_service/commands/ace.md) and paste it into your coding agent.
-    - 🙈 (Not recommended! For humans only) Read the [integration guide](./plugins/ace_service/commands/ace.md) and integrate it manually.
+    - 🙈 (Please dont do this, its not intended for human eyeballs) Read the [integration guide](./plugins/ace_service/commands/ace.md) and integrate it manually.
 4. 🪄 Start running your agent and watch as it automagically improves!
 5. 🖥️ (Optional) Run the [client](./client/) to visualize the database and test the API.
 
