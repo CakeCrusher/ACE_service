@@ -1,7 +1,3 @@
----
-name: ace_service
-description: This skill allows you to integrate the ACE service into your existing agent for continuous learning.
----
 
 # ACE Service Integration Skill
 
@@ -9,7 +5,12 @@ description: This skill allows you to integrate the ACE service into your existi
 
 The ACE (Adaptive Context Enhancement) service enables agents to learn from each execution and continuously improve by maintaining a playbook of proven strategies, common mistakes, and effective solutions. This skill guides implementation of ACE into your existing agent infrastructure.
 
-**Goal**: Implement the simplest possible integration that enables continuous learning.
+**Goal**: Implement the simplest possible integration into this repository that enables continuous learning.
+
+- The changes should be simple edits into the existing codebase, try not to add new files or modules just keep the edits minimal and inline with the existing codebase.
+- There is no ACE api key and the default endpoint will be http://0.0.0.0:8000/ .
+- Dont add additional conditions or constants or environment variables to the code literally only apply the two endpoints where they correspond assume that the developer just wants ace integrated in the minimal amount of code possible.
+- Add the embed prompt not to the user message but to the system message or instruction for the agent or llm call.
 
 ## Essential Workflow
 
